@@ -1,0 +1,41 @@
+package db
+
+import (
+	"fmt"
+	"log"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
+type Student struct {
+	gorm.Model // Includes the struct Model in Student
+	Name string  `json:"name"`
+	CPF int      `json:"cpf"`
+	Email string `json:"email"`
+	Age int      `json:"age"`
+	Active bool  `json:"registration"`
+}
+
+func Init () *gorm.DB {
+	db, err := gorm.Open(sqlite.Open("db/student.db"), &gorm.Config{})
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	db.AutoMigrate(&Student{})
+
+	return db
+}
+
+func AddStudent(student Student) {
+	db := Init()
+
+	
+	if result := db.Create(&student); result.Error != nil {
+		fmt.Println("Error to create student")
+	}
+	
+	fmt.Println("Create student!")
+}
