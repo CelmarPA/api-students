@@ -36,7 +36,7 @@ func NewStudentHandler(db *gorm.DB) *StudentHandler {
 	return &StudentHandler{DB: db}
 }
 
-func (s StudentHandler) AddStudent(student Student) error {
+func (s *StudentHandler) AddStudent(student Student) error {
 
 	if result := s.DB.Create(&student); result.Error != nil {
 		log.Error().Msgf("Failed to create student: %s", result.Error)
@@ -47,10 +47,18 @@ func (s StudentHandler) AddStudent(student Student) error {
 	return nil
 }
 
-func (s StudentHandler) GetStudents() ([]Student, error) {
+func (s *StudentHandler) GetStudents() ([]Student, error) {
 	students := []Student{}
 
 	err := s.DB.Find(&students).Error
 
 	return students, err
+}
+
+func (s StudentHandler) GetStudent(id int) (Student, error) {
+	var student Student
+
+	err := s.DB.First(&student, id)
+	
+	return student, err.Error
 }
