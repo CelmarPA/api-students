@@ -55,10 +55,14 @@ func (s *StudentHandler) GetStudents() ([]Student, error) {
 	return students, err
 }
 
-func (s StudentHandler) GetStudent(id int) (Student, error) {
+func (s *StudentHandler) GetStudent(id int) (Student, error) {
 	var student Student
 
 	err := s.DB.First(&student, id)
 	
 	return student, err.Error
+}
+
+func (s *StudentHandler) UpdateStudent(updateStudent Student) error {
+	return s.DB.Save(&updateStudent).Error
 }
